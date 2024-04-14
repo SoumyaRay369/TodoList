@@ -1,15 +1,48 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {TodoBlocks} from './TodoBlocks'
+
 
 
 export const TodoContainer = () => {
     const [input, setInput] = useState(false)
 
    
-    const [todosArray, setTodosArray] = useState(['Work Hard', 'Get a High Paying Job', 'Buy a Luxury / Sports Car', 'Hit the Gym', 'Pick up some oranges', 'Take them on a ride to LA', 'Live up with them']);
+    const [todosArray, setTodosArray] = useState([]);
+
+    useEffect(() => {
+        fetch('http://localhost:3000/getTodos', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => response.json())
+            .then(data => setTodosArray(data))
+            .catch(error => console.error('Error:', error));
+    }, []);
+
+    let count = todosArray.length;
+
+    const d = new Date();
 
     const addTask = (newTask) => {
-    setTodosArray(prevTodosArray => [...prevTodosArray, newTask]);
+        const taskObject = {
+            task: newTask,
+            taskId: count + 1,
+            date: d.getDate(),
+            day: d.getDay() + 1,
+            year: d.getFullYear(),
+            month: d.getMonth() + 1
+        };
+        fetch('http://localhost:3000/postTodo', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(taskObject)
+        }).then(() => {
+            setTodosArray(prevTodosArray => [...prevTodosArray, taskObject]);
+        })
 }
     const handleClick = () => {
         setInput(!input)
@@ -21,20 +54,10 @@ export const TodoContainer = () => {
             <div className='flex flex-col items-center justify-center'>
                 <div className="flex flex-col mt-10 md:mt-20 2xl:mt-28 rounded-md bg-slate-800 overflow-y-auto h-72 md:h-96 w-1/2 px-3 py-3 hide-scrollbar">
 
-                    {/* <TodoBlocks></TodoBlocks>
-                    <TodoBlocks></TodoBlocks>
-                    <TodoBlocks></TodoBlocks>
-                    <TodoBlocks></TodoBlocks>
-                    <TodoBlocks></TodoBlocks>
-                    <TodoBlocks></TodoBlocks>
-                    <TodoBlocks></TodoBlocks>
-                    <TodoBlocks></TodoBlocks>
-                    <TodoBlocks></TodoBlocks>
-                    <TodoBlocks></TodoBlocks>
-                    <TodoBlocks></TodoBlocks> */}
-                        {todosArray.map(element => (
-        <TodoBlocks text={element} key={element}></TodoBlocks>
-    ))}
+                   
+                    {todosArray.map(element => (
+                        <TodoBlocks text={element.task} key={element.taskId}></TodoBlocks>
+                    ))}
                     
 
 
