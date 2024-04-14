@@ -10,7 +10,7 @@ export const TodoContainer = () => {
     const [todosArray, setTodosArray] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:3000/getTodos', {
+        fetch('https://todolist-msw5.onrender.com/getTodos', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -34,7 +34,7 @@ export const TodoContainer = () => {
             year: d.getFullYear(),
             month: d.getMonth() + 1
         };
-        fetch('http://localhost:3000/postTodo', {
+        fetch('https://todolist-msw5.onrender.com/postTodo', {
             method: 'POST', 
             headers: {
                 'Content-Type': 'application/json',
