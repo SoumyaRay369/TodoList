@@ -14,6 +14,12 @@ app.delete('/deleteTodos', async(req, res) => {
     res.status(200).send({deletedCount: response.deletedCount})
 })
 
+app.delete('/deleteParticularTodo', async(req, res) => {
+    const taskId = req.body.taskId;
+    const response = await todos.deleteOne({taskId: taskId})
+    res.status(200).send({deletedCount: response.deletedCount})
+})
+
 app.post('/postTodo', async(req, res) => {
     const newTodo = new todos({
         task: req.body.task,

@@ -5,36 +5,40 @@ import {TodoBlocks} from './TodoBlocks'
 
 export const TodoContainer = () => {
     const [input, setInput] = useState(false)
-
-   
+    
     const [todosArray, setTodosArray] = useState([]);
-
+    const [count, setCount] = useState(0)
+    // https://todolist-msw5.onrender.com
     useEffect(() => {
-        fetch('https://todolist-msw5.onrender.com/getTodos', {
+        fetch('http://localhost:3000/getTodos', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             }
         })
-            .then(response => response.json())
-            .then(data => setTodosArray(data))
-            .catch(error => console.error('Error:', error));
+        .then(response => response.json())
+        .then(data => setTodosArray(data))
+        .catch(error => console.error('Error:', error));
     }, []);
-
-    let count = todosArray.length;
+    
+    useEffect(() => {
+        setCount(todosArray.length + 1);
+    }, [todosArray]);
+    
 
     const d = new Date();
 
     const addTask = (newTask) => {
+        setCount(count + 1)
         const taskObject = {
             task: newTask,
-            taskId: count + 1,
+            taskId: count,
             date: d.getDate(),
             day: d.getDay() + 1,
             year: d.getFullYear(),
             month: d.getMonth() + 1
         };
-        fetch('https://todolist-msw5.onrender.com/postTodo', {
+        fetch('http://localhost:3000/postTodo', {
             method: 'POST', 
             headers: {
                 'Content-Type': 'application/json',
@@ -56,7 +60,7 @@ export const TodoContainer = () => {
 
                    
                     {todosArray.map(element => (
-                        <TodoBlocks text={element.task} key={element.taskId}></TodoBlocks>
+                        <TodoBlocks key={element.taskId} text={element.task} taskId={element.taskId} ></TodoBlocks>
                     ))}
                     
 
