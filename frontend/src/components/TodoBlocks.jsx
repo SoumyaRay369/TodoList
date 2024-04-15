@@ -22,7 +22,7 @@ export const TodoBlocks = ({text, taskId}) => {
  
     const handleDelete = () => {
         
-        fetch('http://localhost:3000/deleteParticularTodo', {
+        fetch('https://todolist-msw5.onrender.com/deleteParticularTodo', {
             method: 'DELETE', 
             headers: {
                 'Content-Type': 'application/json',
